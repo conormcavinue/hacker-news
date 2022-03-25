@@ -1,9 +1,14 @@
 .card {
-    width: 30%;
+    width: 60%;
     display: flex;
     font-size: 0.8em;
+    margin: 0 auto;
 }
 
-a:visited {
-    color: green;
+.storyLink {
+    text-decoration: none;
+}
+
+.storyLink:visited {
+    color: grey;
 }

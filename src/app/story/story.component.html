@@ -1,12 +1,8 @@
-
-<ng-container *ngIf="stories.length === 30">
-    <div class="card mx-auto bg-light mt-3" *ngFor="let story of stories; let i = index">
-        <div class="d-flex">
-            <div class="index">{{i + 1}}.</div> 
-            <div class="linkUrl"><a [href]="story.url">{{story.title}}</a></div>
-        </div>
-        <div class="card-footer">
-            {{story.score}} points by {{story.by}}. {{story.time | calculateDate}}
+<div class="card row-hover pos-relative py-3 px-3 mb-3 mt-2 border-primary border-top-0 border-right-0 border-bottom-0 rounded-0">
+    <div class="row">
+        <div class="col-md-8">
+            <h5><a [href]="story.url" class="storyLink" target="_blank">{{story.title}}</a></h5>
+            <p>Posted {{story.time | calculateDate}} by {{story.by}} </p>
         </div>
     </div>
-</ng-container>
+</div>

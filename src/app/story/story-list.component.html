@@ -1,0 +1,4 @@
+<ng-container *ngIf="stories.length === 30">
+    <hn-story *ngFor="let story of stories; let i = index" [story]="story"></hn-story>
+</ng-container>
+

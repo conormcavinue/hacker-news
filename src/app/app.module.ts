@@ -5,20 +5,22 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StoryComponent } from './story/story.component';
-import { StoryModule } from './story/story.module';
 import { CalculateDatePipe } from './shared/calculate-date.pipe';
+import { FormsModule } from '@angular/forms';
+import { StoryListComponent } from './story/story-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    StoryListComponent,
     StoryComponent,
     CalculateDatePipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoryModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
