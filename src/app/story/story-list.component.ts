@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Store, select } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { StoryService } from './story.service';
 import { IStory } from './story';
+import { storiesSelector } from '../store/stories.selector';
+import { AppState } from '../store/app.state';
 
 @Component({
   selector: 'hn-story-list',
@@ -10,27 +13,39 @@ import { IStory } from './story';
 })
 export class StoryListComponent implements OnInit {
 
+    private _searchString: string = '';
+    
+    get searchString(): string {
+        return this._searchString;
+    }
+
+    set searchString(value: string) {
+        this._searchString = value;
+        this.displayedStories = this.filterStories(value);
+    }
+
+    listLength: number = 30;
     sub!: Subscription;
     storyNumbers: Array<number> = [];
     stories: Array<IStory> = [];
-    constructor(private storyService: StoryService) {}
+    displayedStories: Array<IStory> = [];
+    constructor(private store: Store<AppState>) {}
 
-    ngOnInit(): void {
-        this.storyService.getStoryIds('topstories').subscribe({
+    filterStories(value: string): Array<IStory> {
+        return this.stories.filter((s: IStory) => s.title.toLowerCase().includes(value.toLowerCase()))
+    }
+
+    retrieveStateStories(): void {
+        this.store.pipe(select(storiesSelector)).subscribe({
             next: stories => {
-                this.storyNumbers = stories;
-                this.storyService.getStories(stories).splice(0, 30).forEach(story => {
-                    story.subscribe({
-                        next: story => {
-                            this.stories.push(story)
-                        }
-                    })
-                })
+                this.stories = stories;
+                this.displayedStories = this.stories;
             }
         });
     }
-    ngOnDestroy(): void {
-        this.sub.unsubscribe();
-    };
+    
+    ngOnInit(): void {
+        this.retrieveStateStories();
+    }
 
 }

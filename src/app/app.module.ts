@@ -8,6 +8,8 @@ import { StoryComponent } from './story/story.component';
 import { CalculateDatePipe } from './shared/calculate-date.pipe';
 import { FormsModule } from '@angular/forms';
 import { StoryListComponent } from './story/story-list.component';
+import { StoreModule } from '@ngrx/store';
+import { storiesReducer } from './store/store.reducer';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,10 @@ import { StoryListComponent } from './story/story-list.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    StoreModule.forRoot({
+        stories: storiesReducer
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
