@@ -1,0 +1,9 @@
+.card {
+    width: 30%;
+    display: flex;
+    font-size: 0.8em;
+}
+
+a:visited {
+    color: green;
+}
