@@ -1,14 +1,28 @@
 import { createReducer, on } from "@ngrx/store";
-import { IStory } from "../story/story";
-import { retrievedStories } from "./store.action";
+import { AppState } from "./app.state";
+import { addNewStory, addTopStory } from "./store.action";
 
-export const initialState: Array<IStory> = [];
+const initialState: AppState =  { 
+    top: [],
+    new: []
+};
 
 const _storiesReducer = createReducer(
     initialState,
-    on(retrievedStories, (state, {allStories}) => {
-        return [...allStories];
-    })
+    on(addNewStory, (state, action) => (
+        {
+            ...state, 
+            new: state.new.concat(action.story)
+        }
+        )
+    ),
+    on(addTopStory, (state, action) => (
+        {
+            ...state, 
+            top: state.top.concat(action.story)
+        }
+        )
+    )
 )
 
 export function storiesReducer(state: any, action: any) {

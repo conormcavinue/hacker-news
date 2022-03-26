@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { StoryService } from './story/story.service';
 import { IStory } from './story/story';
 import { Subscription } from 'rxjs';
 import { AppState } from './store/app.state';
-import { retrievedStories } from './store/store.action';
-import { storiesSelector } from './store/stories.selector';
+import { addNewStory, addTopStory } from './store/store.action';
 
 @Component({
   selector: 'hn-root',
@@ -16,10 +15,6 @@ export class AppComponent implements OnInit {
     title = 'hacker-news';
     private _searchString: string = '';
     sub!: Subscription;
-    storyNumbers: Array<number> = [];
-    stories: Array<IStory> = [];
-    stories$ = this.store.pipe(select(storiesSelector));
-
 
     constructor(private storyService: StoryService, private store: Store<AppState>) {}
 
@@ -31,20 +26,22 @@ export class AppComponent implements OnInit {
         this._searchString = value;
     }
 
-    retrieveStories = () => {
-        this.storyService.getStoryIds('topstories').subscribe({
+    initialFetchStories = (type: string) => {
+        this.storyService.getStoryIds(`${type}stories`).subscribe({
             next: stories => {
-                this.storyNumbers = stories;
-                this.storyService.getStories(stories).forEach(story => {
+                this.storyService.getStories(stories).slice(0,30).forEach(story => {
                     story.subscribe({
                         next: story => {
-                            this.stories = Object.assign([], this.stories);
-                            this.stories.push(story)
-                        },
-                        complete: () => {
-                            this.store.dispatch(
-                                retrievedStories({ allStories: this.stories as IStory[] })
-                            )
+                            if(type === 'new') {
+                                this.store.dispatch(
+                                    addNewStory({story: story as IStory})
+                                )
+                            }
+                            if(type === 'top') {
+                                this.store.dispatch(
+                                    addTopStory({story: story as IStory})
+                                )
+                            }
                         }
                     })
                 })
@@ -52,8 +49,40 @@ export class AppComponent implements OnInit {
         });
     }
 
+    subsequentFetchStories = (type: string) => {
+        this.storyService.getStoryIds(`${type}stories`).subscribe({
+            next: stories => {
+                this.storyService.getStories(stories).slice(32).forEach(story => {
+                    story.subscribe({
+                        next: story => {
+                            if(type === 'new') {
+                                this.store.dispatch(
+                                    addNewStory({story: story as IStory})
+                                )
+                            }
+                            if(type === 'top') {
+                                this.store.dispatch(
+                                    addTopStory({story: story as IStory})
+                                )
+                            }
+                        }
+                    })
+                })
+            }
+        });
+    }
+    
+
+    fetchAllStories(): void {
+        this.initialFetchStories('top');
+        this.initialFetchStories('new');
+        this.subsequentFetchStories('top');
+        this.subsequentFetchStories('new');
+        
+    }
+
     ngOnInit(): void {
-        this.retrieveStories();
+        this.fetchAllStories();
     }
     
 
