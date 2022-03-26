@@ -1,7 +1,5 @@
-import { createSelector } from "@ngrx/store";
-import { IStory } from "../story/story";
-
 import { AppState } from "./app.state";
 
-export const storiesSelector = (state: AppState) => state.stories;
+export const newStoriesSelector = (state: AppState) => state.newStories;
+export const topStoriesSelector = (state: AppState) => state.topStories;
 

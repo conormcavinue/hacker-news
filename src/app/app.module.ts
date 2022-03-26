@@ -25,7 +25,7 @@ import { storiesReducer } from './store/store.reducer';
     FormsModule,
     StoreModule.forRoot({
         stories: storiesReducer
-    })
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
