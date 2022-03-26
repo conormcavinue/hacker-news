@@ -26,10 +26,10 @@ export class AppComponent implements OnInit {
         this._searchString = value;
     }
 
-    retrieveStories = (type: string) => {
+    fetchStories = (type: string) => {
         this.storyService.getStoryIds(`${type}stories`).subscribe({
             next: stories => {
-                this.storyService.getStories(stories).forEach(story => {
+                this.storyService.getStories(stories).slice(0, 30).forEach(story => {
                     story.subscribe({
                         next: story => {
                             if(type === 'new') {
@@ -49,13 +49,13 @@ export class AppComponent implements OnInit {
         });
     }
 
-    retrieveAllStories(): void {
-        this.retrieveStories('top');
-        this.retrieveStories('new');
+    fetchAllStories(): void {
+        this.fetchStories('top');
+        this.fetchStories('new');
     }
 
     ngOnInit(): void {
-        this.retrieveAllStories();
+        this.fetchAllStories();
     }
     
 
