@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { StoryService } from './story/story.service';
 import { IStory } from './story/story';
 import { Subscription } from 'rxjs';
@@ -26,10 +26,10 @@ export class AppComponent implements OnInit {
         this._searchString = value;
     }
 
-    fetchStories = (type: string) => {
+    initialFetchStories = (type: string) => {
         this.storyService.getStoryIds(`${type}stories`).subscribe({
             next: stories => {
-                this.storyService.getStories(stories).slice(0, 30).forEach(story => {
+                this.storyService.getStories(stories).slice(0,30).forEach(story => {
                     story.subscribe({
                         next: story => {
                             if(type === 'new') {
@@ -49,9 +49,36 @@ export class AppComponent implements OnInit {
         });
     }
 
+    subsequentFetchStories = (type: string) => {
+        this.storyService.getStoryIds(`${type}stories`).subscribe({
+            next: stories => {
+                this.storyService.getStories(stories).slice(32).forEach(story => {
+                    story.subscribe({
+                        next: story => {
+                            if(type === 'new') {
+                                this.store.dispatch(
+                                    addNewStory({story: story as IStory})
+                                )
+                            }
+                            if(type === 'top') {
+                                this.store.dispatch(
+                                    addTopStory({story: story as IStory})
+                                )
+                            }
+                        }
+                    })
+                })
+            }
+        });
+    }
+    
+
     fetchAllStories(): void {
-        this.fetchStories('top');
-        this.fetchStories('new');
+        this.initialFetchStories('top');
+        this.initialFetchStories('new');
+        this.subsequentFetchStories('top');
+        this.subsequentFetchStories('new');
+        
     }
 
     ngOnInit(): void {

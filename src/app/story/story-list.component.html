@@ -1,4 +1,4 @@
-<ng-container>
+<ng-container *ngIf="storiesLoading !== true; else loading">
     <div class="row text-left mb-5">
         <div class="col-lg-6 mx-auto">
           <div>
@@ -6,6 +6,9 @@
           </div>
         </div>
       </div>
-    <hn-story *ngFor="let story of displayedStories; let i = index" [story]="story"></hn-story>
+    <hn-story *ngFor="let story of displayedStories.slice(0,30)" [story]="story"></hn-story>
 </ng-container>
+<ng-template #loading>
+    Loading
+</ng-template>
 

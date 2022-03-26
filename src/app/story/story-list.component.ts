@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Subscription } from 'rxjs';
-import { StoryService } from './story.service';
 import { IStory } from './story';
-import { newStoriesSelector, topStoriesSelector } from '../store/stories.selector';
+import { storiesSelector } from '../store/stories.selector';
 import { AppState } from '../store/app.state';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'hn-story-list',
@@ -21,37 +20,43 @@ export class StoryListComponent implements OnInit {
 
     set searchString(value: string) {
         this._searchString = value;
-        // this.displayedStories = this.filterStories(value);
+        this.displayedStories = this.filterStories(value);
     }
 
     listLength: number = 30;
-    sub!: Subscription;
-    storyNumbers: Array<number> = [];
-    stories: Map<string, Array<IStory>> = new Map();
+    storiesLoading: boolean = true;
+    startIndex: number = 0;
+    stories: any;
+    storyType: string = '';
     displayedStories!: Array<IStory>;
-    constructor(private store: Store<AppState>) {}
+    constructor(private route: ActivatedRoute,
+                private router: Router,
+                private store: Store<AppState>) {}
 
-    // filterStories(value: string): Array<IStory> {
-    //     // return this.stories.filter((s: IStory) => s.title.toLowerCase().includes(value.toLowerCase()))
-    // }
+    filterStories(value: string): Array<IStory> {
+        let currentStories = this.stories;
+        return currentStories[this.storyType].filter((s: IStory) => s.title.toLowerCase().includes(value.toLowerCase()))
+    }
 
-    retrieveStories(type: string): void {
-        this.store.pipe(select(newStoriesSelector)).subscribe({
+    retrieveStories(): void {
+        this.store.pipe(select(storiesSelector)).subscribe({
             next: stories => {
-                this.stories.set(type, stories);
-                this.displayedStories = this.stories.get(type) ?? Array<IStory>();
-                console.log(this.stories);
+                this.stories = stories.stories;
+                this.displayedStories = this.stories[this.storyType].slice(this.startIndex - 1, this.startIndex + 30) ?? Array<IStory>();
+                if(this.displayedStories.length >= 29) {
+                    this.storiesLoading = false;
+                }
             }
         });
     }
 
-    retrieveAllStories(): void {
-        this.retrieveStories('top');
-        this.retrieveStories('new');
-    }
-    
     ngOnInit(): void {
-        this.retrieveAllStories();
+        this.route.params.subscribe(params => {
+            this.storyType = String(this.route.snapshot.paramMap.get('type'));
+            this.startIndex = Number(this.route.snapshot.paramMap.get('index'))
+            this.retrieveStories();
+        })
+        
     }
 
 }

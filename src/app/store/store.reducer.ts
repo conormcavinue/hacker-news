@@ -3,8 +3,8 @@ import { AppState } from "./app.state";
 import { addNewStory, addTopStory } from "./store.action";
 
 const initialState: AppState =  { 
-    topStories: [],
-    newStories: []
+    top: [],
+    new: []
 };
 
 const _storiesReducer = createReducer(
@@ -12,14 +12,14 @@ const _storiesReducer = createReducer(
     on(addNewStory, (state, action) => (
         {
             ...state, 
-            newStories: state.newStories.concat(action.story)
+            new: state.new.concat(action.story)
         }
         )
     ),
     on(addTopStory, (state, action) => (
         {
             ...state, 
-            topStories: state.topStories.concat(action.story)
+            top: state.top.concat(action.story)
         }
         )
     )

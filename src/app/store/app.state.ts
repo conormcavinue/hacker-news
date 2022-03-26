@@ -1,7 +1,7 @@
 import { IStory } from "../story/story";
 
 export interface AppState {
-    topStories: Array<IStory>;
-    newStories: Array<IStory>;
+    top: Array<IStory>;
+    new: Array<IStory>;
     stories?: AppState;
 }
