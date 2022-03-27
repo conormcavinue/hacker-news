@@ -13,3 +13,7 @@
 .storyLink:visited {
     color: grey;
 }
+
+.border-hacker {
+    border-color: #f68423 !important;
+}
