@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IStory } from './story';
 import { storiesSelector } from '../store/stories.selector';
@@ -13,7 +13,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class StoryListComponent implements OnInit {
 
     private _searchString: string = '';
-    
+    private _listLength: number = 30;
+    private _displayedStories!: Array<IStory>;
+    private _stories: any;
+    private _pages: Array<number> = [];
+
     get searchString(): string {
         return this._searchString;
     }
@@ -21,42 +25,96 @@ export class StoryListComponent implements OnInit {
     set searchString(value: string) {
         this._searchString = value;
         this.displayedStories = this.filterStories(value);
+        this.pages = this.filterStories(value);
     }
 
-    listLength: number = 30;
+    get listLength(): number {
+        return this._listLength;
+    }
+
+    set listLength(value: number) {
+        this._listLength = value;
+        this.changeListLength(value);
+    }
+
+    get displayedStories(): Array<IStory> {
+        return this._displayedStories;
+    }
+
+    set displayedStories(stories: any) {
+        if (this.searchString !== '') {
+            this._displayedStories = stories.slice((this.pageIndex - 1) *  this.listLength, ((this.pageIndex - 1) * this.listLength) + this.listLength) ?? Array<IStory>();
+        } else {
+            this._displayedStories = stories[this.storyType].slice((this.pageIndex - 1) *  this.listLength, ((this.pageIndex - 1) * this.listLength) + this.listLength) ?? Array<IStory>();
+        }
+        if(this.displayedStories.length >= this.listLength) {
+            this.storiesLoading = false;
+        }
+    }
+
+    get stories(): any {
+        return this._stories
+    }
+
+    set stories(value: any) {
+        this._stories = value;
+        this.displayedStories = value;
+    }
+
+    get pages(): Array<number> {
+        return this._pages
+    }
+
+    set pages(stories: any) {
+        if (this.searchString !== '') {
+            this._pages = new Array(Math.round(stories.length / this.listLength));
+        } else {
+            this._pages = new Array(Math.round(this.stories[this.storyType].length / this.listLength));
+        }
+    }
+
+
     storiesLoading: boolean = true;
-    startIndex: number = 0;
-    stories: any;
+    filtered: boolean = false;
+    pageIndex: number = 0;
     storyType: string = '';
-    displayedStories!: Array<IStory>;
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private store: Store<AppState>) {}
 
     filterStories(value: string): Array<IStory> {
-        let currentStories = this.stories;
-        return currentStories[this.storyType].filter((s: IStory) => s.title.toLowerCase().includes(value.toLowerCase()))
+        if (value === '') {
+            return this.stories[this.storyType]
+        } else {
+            return this.stories[this.storyType].filter((s: IStory) => s.title.toLowerCase().includes(value.toLowerCase()))
+        }
+        
+    }
+
+    changeListLength(value: number): void {
+        this.pages = new Array(Math.round(this.stories[this.storyType].length / this.listLength));
+        this.router.navigateByUrl(`stories/${this.storyType}/1`);
     }
 
     retrieveStories(): void {
         this.store.pipe(select(storiesSelector)).subscribe({
             next: stories => {
                 this.stories = stories.stories;
-                this.displayedStories = this.stories[this.storyType].slice(this.startIndex - 1, this.startIndex + 30) ?? Array<IStory>();
-                if(this.displayedStories.length >= 29) {
-                    this.storiesLoading = false;
-                }
+                this.pages = stories.stories;
             }
         });
     }
 
+    @Output()
+    typeChanged: EventEmitter<string> = new EventEmitter();
+
     ngOnInit(): void {
-        this.route.params.subscribe(params => {
+        this.route.params.subscribe(() => {
             this.storyType = String(this.route.snapshot.paramMap.get('type'));
-            this.startIndex = Number(this.route.snapshot.paramMap.get('index'))
+            this.typeChanged.emit(this.storyType);
+            this.pageIndex = Number(this.route.snapshot.paramMap.get('index'))
             this.retrieveStories();
         })
-        
     }
 
 }

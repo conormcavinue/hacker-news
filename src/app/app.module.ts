@@ -11,6 +11,7 @@ import { StoryListComponent } from './story/story-list.component';
 import { StoreModule } from '@ngrx/store';
 import { storiesReducer } from './store/store.reducer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
@@ -30,6 +32,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     StoreDevtoolsModule.instrument({
         maxAge: 25
     })
+  ],
+  exports: [
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

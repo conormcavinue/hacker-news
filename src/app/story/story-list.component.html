@@ -1,14 +1,25 @@
 <ng-container *ngIf="storiesLoading !== true; else loading">
-    <div class="row text-left mb-5">
-        <div class="col-lg-6 mx-auto">
-          <div>
-              <input [(ngModel)]="searchString" class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" type="text" placeholder="Search for Story">
-          </div>
+    <div class="btn btn-group">
+        <a *ngFor="let number of pages; let i = index" class="btn btn-primary" [class.selected]="pageIndex - 1 === i" [routerLink]="['/stories', storyType, i + 1]">{{i + 1}}</a>
+    </div>
+    <div class="container filters">
+        <div>
+            <input [(ngModel)]="searchString" class="form-control mr-auto form-control-inline" type="text" placeholder="Search for Story">
         </div>
-      </div>
-    <hn-story *ngFor="let story of displayedStories.slice(0,30)" [story]="story"></hn-story>
+        <div>
+            Stories per Page: 
+            <select class="form-select form-control-inline" [(ngModel)]="listLength">
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+    </div>
+    <hn-story *ngFor="let story of displayedStories.slice(0, listLength)" [story]="story"></hn-story>
 </ng-container>
 <ng-template #loading>
-    Loading
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
 </ng-template>
 

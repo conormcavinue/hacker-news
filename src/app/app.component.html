@@ -1,15 +1,11 @@
-<div class="container">
-    <div class="btn btn-group">
+<div class="container text-center">
+    <div class="btn btn-group align-items-center">
         <button class="btn btn-primary" (click)="fetchAllStories()">Refresh</button>
         <a class="btn btn-primary" [routerLink]="['/stories/new/1']">New</a>
         <a class="btn btn-primary" [routerLink]="['/stories/top/1']">Top</a>
     </div>
-    <div class="btn btn-group">
-        <a class="btn btn-primary" [routerLink]="['/stories/new/1']">1</a>
-        <a class="btn btn-primary" [routerLink]="['/stories/new/2']">2</a>
-        <a class="btn btn-primary" [routerLink]="['/stories/new/3']">3</a>
-        <a class="btn btn-primary" [routerLink]="['/stories/new/4']">4</a>
-        <a class="btn btn-primary" [routerLink]="['/stories/new/5']">5</a>
+    <div class="card bg-light">
+        <div class="card-header"><h4>{{ storyType | titlecase }} Stories</h4></div>
+        <router-outlet (activate)="subscribeToEmitter($event)"></router-outlet>
     </div>
-    <router-outlet></router-outlet>
 </div>
