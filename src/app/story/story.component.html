@@ -1,14 +1,16 @@
-<div class="card row-hover pos-relative px-3 mb-3 mt-2 border border-primary border-top-0 border-right-0 border-bottom-0 rounded-0">
-    <div class="row pt-3">
-        <div class="col-md-9">
-            <h5><a [href]="story.url" class="storyLink" target="_blank">{{story.title}}</a></h5>
-            <p class="mt-auto mt-3 pt-3">Posted {{story.time | calculateDate}} by {{story.by}} </p>
-        </div>
-        <div class="col-md-3 op-7 mt-auto">
-            <div class="row text-center op-7 pt-auto">
-                <div class="col px-1"> <i class="fa fa-2x fa-bar-chart"></i> <span class="d-block text-sm">Score: {{story.score}}</span> </div>
-                <div class="col px-1"> <i class="fa fa-2x fa-comments"></i> <span class="d-block text-sm">{{story.kids ? story.kids.length : 0}} Comments</span> </div>
-              </div>
+<div @animation>
+    <div class="card pos-relative px-3 mb-3 mt-2 border border-primary border-top-0 border-right-0 border-bottom-0 rounded-0">
+        <div class="row pt-3">
+            <div class="col-md-9">
+                <h5><a [href]="story.url" class="storyLink" target="_blank">{{story.title}}</a></h5>
+                <p class="mt-auto mt-3 pt-3">Posted {{story.time | calculateDate}} by {{story.by}} </p>
+            </div>
+            <div class="col-md-3 op-7 mt-auto">
+                <div class="row text-center op-7 pt-auto">
+                    <div class="col px-1"> <i class="fa fa-2x fa-bar-chart"></i> <span class="d-block text-sm">Score: {{story.score}}</span> </div>
+                    <div class="col px-1"> <i class="fa fa-2x fa-comments"></i> <span class="d-block text-sm">{{story.kids ? story.kids.length : 0}} Comments</span> </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

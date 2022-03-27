@@ -4,7 +4,6 @@ import { IStory } from './story';
 import { storiesSelector } from '../store/stories.selector';
 import { AppState } from '../store/app.state';
 import { ActivatedRoute, Router } from '@angular/router';
-
 @Component({
   selector: 'hn-story-list',
   templateUrl: './story-list.component.html',
@@ -35,7 +34,7 @@ export class StoryListComponent implements OnInit {
 
 
     storiesLoading: boolean = true;
-    startIndex: number = 0;
+    pageIndex: number = 0;
     pages!: Array<number>;
     stories: any;
     storyType: string = '';
@@ -49,16 +48,17 @@ export class StoryListComponent implements OnInit {
     }
 
     changeListLength(value: number): void {
-        this.pages = new Array(Math.floor(this.stories[this.storyType].length / this.listLength));
-        this.displayedStories = this.stories[this.storyType].slice(this.startIndex - 1, this.startIndex + this.listLength) ?? Array<IStory>();
+        this.pages = new Array(Math.round(this.stories[this.storyType].length / this.listLength));
+        this.displayedStories = this.stories[this.storyType].slice((this.pageIndex - 1) *  this.listLength, ((this.pageIndex - 1) * this.listLength) + this.listLength) ?? Array<IStory>();
+        this.router.navigateByUrl(`stories/${this.storyType}/1`);
     }
 
     retrieveStories(): void {
         this.store.pipe(select(storiesSelector)).subscribe({
             next: stories => {
                 this.stories = stories.stories;
-                this.displayedStories = this.stories[this.storyType].slice(this.startIndex - 1, this.startIndex + this.listLength) ?? Array<IStory>();
-                this.pages = new Array(Math.floor(this.stories[this.storyType].length / this.listLength));
+                this.displayedStories = this.stories[this.storyType].slice((this.pageIndex - 1) *  this.listLength, ((this.pageIndex - 1) * this.listLength) + this.listLength) ?? Array<IStory>();
+                this.pages = new Array(Math.round(this.stories[this.storyType].length / this.listLength));
                 if(this.displayedStories.length >= this.listLength) {
                     this.storiesLoading = false;
                 }
@@ -69,10 +69,9 @@ export class StoryListComponent implements OnInit {
     ngOnInit(): void {
         this.route.params.subscribe(params => {
             this.storyType = String(this.route.snapshot.paramMap.get('type'));
-            this.startIndex = Number(this.route.snapshot.paramMap.get('index'))
+            this.pageIndex = Number(this.route.snapshot.paramMap.get('index'))
             this.retrieveStories();
         })
-        
     }
 
 }

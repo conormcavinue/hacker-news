@@ -1,8 +1,10 @@
-<div class="container">
-    <div class="btn btn-group">
+<div class="container text-center">
+    <div class="btn btn-group align-items-center">
         <button class="btn btn-primary" (click)="fetchAllStories()">Refresh</button>
         <a class="btn btn-primary" [routerLink]="['/stories/new/1']">New</a>
         <a class="btn btn-primary" [routerLink]="['/stories/top/1']">Top</a>
     </div>
-    <router-outlet></router-outlet>
+    <div class="card bg-light">
+        <router-outlet></router-outlet>
+    </div>
 </div>
