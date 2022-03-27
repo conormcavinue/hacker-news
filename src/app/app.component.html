@@ -3,7 +3,7 @@
     <div class="btn btn-group align-items-center">
         <a class="btn btn-primary" [routerLink]="['/stories/new/1']">New</a>
         <a class="btn btn-primary" [routerLink]="['/stories/top/1']">Top</a>
-        <button class="btn btn-primary" (click)="fetchAllStories()">Refresh</button>
+        <button @animation *ngIf="!stateLoading" class="btn btn-primary" (click)="refreshStories()">Refresh</button>
     </div>
     <div class="card bg-light">
         <div class="card-header"><h4>{{ storyType | titlecase }} Stories</h4></div>

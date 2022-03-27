@@ -1,10 +1,12 @@
 import { createReducer, on } from "@ngrx/store";
+import { Action } from "rxjs/internal/scheduler/Action";
 import { AppState } from "./app.state";
-import { addNewStory, addTopStory } from "./store.action";
+import { addNewStory, addTopStory, clearStories, setStoryCount } from "./store.action";
 
 const initialState: AppState =  { 
     top: [],
-    new: []
+    new: [],
+    storyCount: 0
 };
 
 const _storiesReducer = createReducer(
@@ -20,6 +22,21 @@ const _storiesReducer = createReducer(
         {
             ...state, 
             top: state.top.concat(action.story)
+        }
+        )
+    ),
+    on(clearStories, (state) => (
+        {
+            ...state,
+            new: [],
+            top: []
+        }
+        )
+    ),
+    on(setStoryCount, (state, action) => (
+        {
+            ...state,
+            storyCount: action.storyCount
         }
         )
     )

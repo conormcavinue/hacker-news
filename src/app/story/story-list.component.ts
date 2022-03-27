@@ -1,16 +1,30 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IStory } from './story';
-import { storiesSelector } from '../store/stories.selector';
+import { storiesFound, storiesSelector } from '../store/stories.selector';
 import { AppState } from '../store/app.state';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'hn-story-list',
   templateUrl: './story-list.component.html',
-  styleUrls: ['./story-list.component.css']
+  styleUrls: ['./story-list.component.css'],
+  animations: [
+      trigger('animation', [
+        transition(":enter", [
+            style({ opacity: 0 }),
+            animate('200ms', style({ opacity: 1 }))
+        ]),
+        transition(":leave", [
+            style({ opacity: 1 }),
+            animate('200ms', style({ opacity: 0 }))
+        ]),
+    ])
+  ]
 })
-export class StoryListComponent implements OnInit {
+export class StoryListComponent implements OnInit, OnDestroy {
 
     private _searchString: string = '';
     private _listLength: number = 30;
@@ -49,6 +63,8 @@ export class StoryListComponent implements OnInit {
         }
         if(this.displayedStories.length >= this.listLength) {
             this.storiesLoading = false;
+        } else {
+            this.storiesLoading = true;
         }
     }
 
@@ -78,6 +94,9 @@ export class StoryListComponent implements OnInit {
     filtered: boolean = false;
     pageIndex: number = 0;
     storyType: string = '';
+    sub!: Subscription;
+    stateLoading: boolean = true;
+
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private store: Store<AppState>) {}
@@ -88,16 +107,15 @@ export class StoryListComponent implements OnInit {
         } else {
             return this.stories[this.storyType].filter((s: IStory) => s.title.toLowerCase().includes(value.toLowerCase()))
         }
-        
     }
 
     changeListLength(value: number): void {
-        this.pages = new Array(Math.round(this.stories[this.storyType].length / this.listLength));
+        this.pages = this.stories;
         this.router.navigateByUrl(`stories/${this.storyType}/1`);
     }
 
     retrieveStories(): void {
-        this.store.pipe(select(storiesSelector)).subscribe({
+        this.sub = this.store.pipe(select(storiesSelector)).subscribe({
             next: stories => {
                 this.stories = stories.stories;
                 this.pages = stories.stories;
@@ -114,7 +132,20 @@ export class StoryListComponent implements OnInit {
             this.typeChanged.emit(this.storyType);
             this.pageIndex = Number(this.route.snapshot.paramMap.get('index'))
             this.retrieveStories();
+            this.store.pipe(select(storiesFound)).subscribe({
+                next: state => {
+                    if( state ) {
+                        this.stateLoading = false;
+                    } else {
+                        this.stateLoading = true;
+                    }
+                }
+            })
         })
+    }
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
     }
 
 }
