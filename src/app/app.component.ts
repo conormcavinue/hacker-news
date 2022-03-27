@@ -24,7 +24,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 })
 export class AppComponent implements OnInit {
     title = 'hacker-news';
-    storyType: string = '';
+    storyType: string = 'new';
     stateLoading: boolean = true;
 
     constructor(private route: ActivatedRoute, private storyService: StoryService, private store: Store<AppState>) {}
