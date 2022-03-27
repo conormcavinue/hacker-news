@@ -13,7 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class StoryListComponent implements OnInit {
 
     private _searchString: string = '';
-    
+    private _listLength: number = 30;
+
     get searchString(): string {
         return this._searchString;
     }
@@ -23,9 +24,19 @@ export class StoryListComponent implements OnInit {
         this.displayedStories = this.filterStories(value);
     }
 
-    listLength: number = 30;
+    get listLength(): number {
+        return this._listLength;
+    }
+
+    set listLength(value: number) {
+        this._listLength = value;
+        this.changeListLength(value);
+    }
+
+
     storiesLoading: boolean = true;
     startIndex: number = 0;
+    pages!: Array<number>;
     stories: any;
     storyType: string = '';
     displayedStories!: Array<IStory>;
@@ -34,16 +45,21 @@ export class StoryListComponent implements OnInit {
                 private store: Store<AppState>) {}
 
     filterStories(value: string): Array<IStory> {
-        let currentStories = this.stories;
-        return currentStories[this.storyType].filter((s: IStory) => s.title.toLowerCase().includes(value.toLowerCase()))
+        return this.stories[this.storyType].filter((s: IStory) => s.title.toLowerCase().includes(value.toLowerCase()))
+    }
+
+    changeListLength(value: number): void {
+        this.pages = new Array(Math.floor(this.stories[this.storyType].length / this.listLength));
+        this.displayedStories = this.stories[this.storyType].slice(this.startIndex - 1, this.startIndex + this.listLength) ?? Array<IStory>();
     }
 
     retrieveStories(): void {
         this.store.pipe(select(storiesSelector)).subscribe({
             next: stories => {
                 this.stories = stories.stories;
-                this.displayedStories = this.stories[this.storyType].slice(this.startIndex - 1, this.startIndex + 30) ?? Array<IStory>();
-                if(this.displayedStories.length >= 29) {
+                this.displayedStories = this.stories[this.storyType].slice(this.startIndex - 1, this.startIndex + this.listLength) ?? Array<IStory>();
+                this.pages = new Array(Math.floor(this.stories[this.storyType].length / this.listLength));
+                if(this.displayedStories.length >= this.listLength) {
                     this.storiesLoading = false;
                 }
             }
