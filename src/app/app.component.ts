@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { AppState } from './store/app.state';
 import { addNewStory, addTopStory } from './store/store.action';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StoryListComponent } from './story/story-list.component';
 
 @Component({
   selector: 'hn-root',
@@ -14,17 +15,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
     title = 'hacker-news';
-    private _searchString: string = '';
+    storyType: string = '';
 
     constructor(private route: ActivatedRoute, private storyService: StoryService, private store: Store<AppState>) {}
 
-    get searchString(): string {
-        return this._searchString;
-    }
-
-    set searchString(value: string) {
-        this._searchString = value;
-    }
 
     initialFetchStories = (type: string) => {
         this.storyService.getStoryIds(`${type}stories`).subscribe({
@@ -79,8 +73,16 @@ export class AppComponent implements OnInit {
             }
         });
     }
-    
-    
+
+    subscribeToEmitter(componentRef: StoryListComponent) {
+        if(!(componentRef instanceof StoryListComponent)) {
+            return;
+        }
+        const child: StoryListComponent = componentRef;
+        child.typeChanged.subscribe( (type) => {
+            this.storyType = type;
+        });
+    }
 
     fetchAllStories(): void {
         this.initialFetchStories('top');

@@ -18,6 +18,8 @@
     <hn-story *ngFor="let story of displayedStories.slice(0, listLength)" [story]="story"></hn-story>
 </ng-container>
 <ng-template #loading>
-    Loading
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
 </ng-template>
 

@@ -7,3 +7,20 @@ body{
     background:#eee;
     color: #708090;
 }
+
+.btn-primary {
+    background-color: #f68423;
+    box-shadow: none;
+    border-color: #f68423;
+}
+
+.btn-primary:hover {
+    background-color: #f75402;
+    border-color: #f68423;
+}
+
+.btn-primary:focus {
+    background-color: #f68423;
+    box-shadow: none;
+    border-color: #f68423;
+}

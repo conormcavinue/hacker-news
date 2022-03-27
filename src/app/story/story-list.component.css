@@ -1,5 +1,6 @@
 .selected {
-    background-color: #233591;
+    background-color: #f75402;
+    border-color: #f68423;
 }
 
 .btn:focus {

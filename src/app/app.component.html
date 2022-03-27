@@ -5,6 +5,7 @@
         <a class="btn btn-primary" [routerLink]="['/stories/top/1']">Top</a>
     </div>
     <div class="card bg-light">
-        <router-outlet></router-outlet>
+        <div class="card-header"><h4>{{ storyType | titlecase }} Stories</h4></div>
+        <router-outlet (activate)="subscribeToEmitter($event)"></router-outlet>
     </div>
 </div>
