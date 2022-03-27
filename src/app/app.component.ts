@@ -105,10 +105,10 @@ export class AppComponent implements OnInit {
     }
 
     fetchAllStories(): void {
-        this.initialFetchStories('top');
         this.initialFetchStories('new');
-        this.subsequentFetchStories('top');
+        this.initialFetchStories('top')
         this.subsequentFetchStories('new');
+        this.subsequentFetchStories('top');
         
     }
 

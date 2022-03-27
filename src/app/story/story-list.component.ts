@@ -60,11 +60,11 @@ export class StoryListComponent implements OnInit, OnDestroy {
             this._displayedStories = stories.slice((this.pageIndex - 1) *  this.listLength, ((this.pageIndex - 1) * this.listLength) + this.listLength) ?? Array<IStory>();
         } else {
             this._displayedStories = stories[this.storyType].slice((this.pageIndex - 1) *  this.listLength, ((this.pageIndex - 1) * this.listLength) + this.listLength) ?? Array<IStory>();
-        }
-        if(this.displayedStories.length >= this.listLength) {
-            this.storiesLoading = false;
-        } else {
-            this.storiesLoading = true;
+            if(this.displayedStories.length >= this.listLength ) {
+                this.storiesLoading = false;
+            } else {
+                this.storiesLoading = true;
+            }
         }
     }
 
@@ -83,9 +83,9 @@ export class StoryListComponent implements OnInit, OnDestroy {
 
     set pages(stories: any) {
         if (this.searchString !== '') {
-            this._pages = new Array(Math.round(stories.length / this.listLength));
+            this._pages = new Array(Math.floor(this.filterStories(this.searchString).length / this.listLength));
         } else {
-            this._pages = new Array(Math.round(this.stories[this.storyType].length / this.listLength));
+            this._pages = new Array(Math.floor(this.stories[this.storyType].length / this.listLength));
         }
     }
 
@@ -103,7 +103,7 @@ export class StoryListComponent implements OnInit, OnDestroy {
 
     filterStories(value: string): Array<IStory> {
         if (value === '') {
-            return this.stories[this.storyType]
+            return this.stories
         } else {
             return this.stories[this.storyType].filter((s: IStory) => s.title.toLowerCase().includes(value.toLowerCase()))
         }

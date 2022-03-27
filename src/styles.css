@@ -28,3 +28,19 @@ body{
     background-color: #f68423;
     color: white;
 }
+
+#main-page {
+    position: relative;
+    min-height: 100vh;
+}
+
+#content {
+padding-bottom: 2.5rem; 
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;
+}

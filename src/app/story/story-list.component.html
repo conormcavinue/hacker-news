@@ -15,11 +15,20 @@
             </select>
         </div>
     </div>
-    <hn-story *ngFor="let story of displayedStories.slice(0, listLength)" [story]="story"></hn-story>
+    <ng-container *ngIf="displayedStories.length > 0; else nostoriesfound">
+        <hn-story *ngFor="let story of displayedStories.slice(0, listLength)" [story]="story"></hn-story>
+    </ng-container>
+    <ng-template #nostoriesfound>
+        <div class="no-stories">
+            <h3 id="no-stories-text">No Results</h3>
+        </div>
+    </ng-template>
 </ng-container>
 <ng-template #loading>
-    <div class="spinner-border mt-5 mb-5" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
+    <div class="no-stories">
+        <div id="spinner" class="spinner-border mt-5 mb-5" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
 </ng-template>
 

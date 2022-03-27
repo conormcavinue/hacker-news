@@ -2,3 +2,7 @@
     background-color: #f68423;
     color: white;
 }
+
+.story-card {
+    min-height: 50vh;
+}
