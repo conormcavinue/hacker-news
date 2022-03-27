@@ -3,7 +3,6 @@
 @import "~font-awesome/css/font-awesome.min.css";
 
 body{
-    margin-top:20px;
     background:#eee;
     color: #708090;
 }
@@ -23,4 +22,9 @@ body{
     background-color: #f68423;
     box-shadow: none;
     border-color: #f68423;
+}
+
+.navbar {
+    background-color: #f68423;
+    color: white;
 }

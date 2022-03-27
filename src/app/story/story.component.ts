@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IStory } from './story';
 import { transition, style, animate, trigger } from '@angular/animations'
 
@@ -7,7 +7,7 @@ import { transition, style, animate, trigger } from '@angular/animations'
   templateUrl: './story.component.html',
   styleUrls: ['./story.component.css'],
   animations: [
-      trigger('animation', [
+      trigger('storyAnimation', [
         transition(":enter", [
             style({ opacity: 0 }),
             animate('200ms', style({ opacity: 1 }))

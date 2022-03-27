@@ -1,21 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { StoryService } from './story/story.service';
 import { IStory } from './story/story';
-import { Subscription } from 'rxjs';
 import { AppState } from './store/app.state';
-import { addNewStory, addTopStory } from './store/store.action';
-import { ActivatedRoute, Router } from '@angular/router';
+import { addNewStory, addTopStory, clearStories, setStoryCount } from './store/store.action';
+import { ActivatedRoute } from '@angular/router';
 import { StoryListComponent } from './story/story-list.component';
+import { storiesFound } from './store/stories.selector';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'hn-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [
+      trigger('animation', [
+        transition(":enter", [
+            style({ opacity: 0 }),
+            animate('200ms', style({ opacity: 1 }))
+        ])
+    ])
+  ]
 })
 export class AppComponent implements OnInit {
     title = 'hacker-news';
     storyType: string = '';
+    stateLoading: boolean = true;
 
     constructor(private route: ActivatedRoute, private storyService: StoryService, private store: Store<AppState>) {}
 
@@ -23,6 +33,9 @@ export class AppComponent implements OnInit {
     initialFetchStories = (type: string) => {
         this.storyService.getStoryIds(`${type}stories`).subscribe({
             next: stories => {
+                this.store.dispatch(
+                    setStoryCount({storyCount: stories.length})
+                );
                 this.storyService.getStories(stories).slice(0,30).forEach(story => {
                     story.subscribe({
                         next: story => {
@@ -84,6 +97,13 @@ export class AppComponent implements OnInit {
         });
     }
 
+    refreshStories(): void {
+        this.store.dispatch(
+            clearStories()
+        );
+        this.fetchAllStories();
+    }
+
     fetchAllStories(): void {
         this.initialFetchStories('top');
         this.initialFetchStories('new');
@@ -94,6 +114,15 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         this.fetchAllStories();
+        this.store.pipe(select(storiesFound)).subscribe({
+            next: state => {
+                if( state ) {
+                    this.stateLoading = false;
+                } else {
+                    this.stateLoading = true;
+                }
+            }
+        })
     }
     
 

@@ -12,13 +12,15 @@ import { StoreModule } from '@ngrx/store';
 import { storiesReducer } from './store/store.reducer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NavBarComponent } from './shared/nav-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     StoryListComponent,
     StoryComponent,
-    CalculateDatePipe
+    CalculateDatePipe,
+    NavBarComponent
   ],
   imports: [
     BrowserModule,
