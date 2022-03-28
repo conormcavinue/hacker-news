@@ -1,6 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IStory } from './story';
 
 import { StoryService } from './story.service';
 
@@ -18,7 +17,7 @@ describe('StoryService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-    
+
     it('Should get Story', waitForAsync(() => {
         let stories = service.getStories([1]);
         for(let story of stories) {

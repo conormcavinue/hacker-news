@@ -83,9 +83,9 @@ export class StoryListComponent implements OnInit, OnDestroy {
 
     set pages(stories: any) {
         if (this.searchString !== '') {
-            this._pages = new Array(Math.floor(this.filterStories(this.searchString).length / this.listLength));
+            this._pages = new Array(Math.ceil(this.filterStories(this.searchString).length / this.listLength));
         } else {
-            this._pages = new Array(Math.floor(this.stories[this.storyType].length / this.listLength));
+            this._pages = new Array(Math.ceil(this.stories[this.storyType].length / this.listLength));
         }
     }
 
@@ -111,6 +111,7 @@ export class StoryListComponent implements OnInit, OnDestroy {
 
     changeListLength(value: number): void {
         this.pages = this.stories;
+        this.displayedStories = this.stories;
         this.router.navigateByUrl(`stories/${this.storyType}/1`);
     }
 
@@ -124,12 +125,15 @@ export class StoryListComponent implements OnInit, OnDestroy {
     }
 
     @Output()
-    typeChanged: EventEmitter<string> = new EventEmitter();
+    typeChangedEmit: EventEmitter<string> = new EventEmitter();
+
+    @Output()
+    stateLoadingEmit: EventEmitter<boolean> = new EventEmitter();
 
     ngOnInit(): void {
         this.route.params.subscribe(() => {
             this.storyType = String(this.route.snapshot.paramMap.get('type'));
-            this.typeChanged.emit(this.storyType);
+            this.typeChangedEmit.emit(this.storyType);
             this.pageIndex = Number(this.route.snapshot.paramMap.get('index'))
             this.retrieveStories();
             this.store.pipe(select(storiesFound)).subscribe({
@@ -139,6 +143,7 @@ export class StoryListComponent implements OnInit, OnDestroy {
                     } else {
                         this.stateLoading = true;
                     }
+                    this.stateLoadingEmit.emit(this.stateLoading)
                 }
             })
         })

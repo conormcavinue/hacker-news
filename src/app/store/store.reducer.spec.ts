@@ -1,10 +1,4 @@
 import { IStory } from "../story/story";
-import { AppState } from "./app.state";
-import {
-  addNewStory,
-  clearStories,
-  setStoryCount
-} from './store.action';
 import { initialState, storiesReducer } from './store.reducer';
 
 describe('Story Reducer', () => {

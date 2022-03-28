@@ -16,7 +16,8 @@ export class CalculateDatePipe implements PipeTransform {
         ${years ? years + ` year${years > 1 ? 's' : ''}, ` : ''} 
         ${days ? days + ` day${days > 1 ? 's' : ''}, `: ''} 
         ${hours ? hours + ` hour${hours > 1 ? 's' : ''}, `: ''} 
-        ${minutes} minutes ago`;
+        ${minutes + ` minute${minutes != 1 ? 's' : ''}`}
+        ` 
   }
 
 }

@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { StoryService } from './story/story.service';
 import { IStory } from './story/story';
 import { AppState } from './store/app.state';
 import { addNewStory, addTopStory, clearStories, setStoryCount } from './store/store.action';
 import { ActivatedRoute } from '@angular/router';
 import { StoryListComponent } from './story/story-list.component';
-import { storiesFound } from './store/stories.selector';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
@@ -92,9 +91,12 @@ export class AppComponent implements OnInit {
             return;
         }
         const child: StoryListComponent = componentRef;
-        child.typeChanged.subscribe( (type) => {
+        child.typeChangedEmit.subscribe( (type: string) => {
             this.storyType = type;
         });
+        child.stateLoadingEmit.subscribe( (stateLoading: boolean) => {
+            this.stateLoading = stateLoading;
+        })
     }
 
     refreshStories(): void {
@@ -114,15 +116,6 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         this.fetchAllStories();
-        this.store.pipe(select(storiesFound)).subscribe({
-            next: state => {
-                if( state ) {
-                    this.stateLoading = false;
-                } else {
-                    this.stateLoading = true;
-                }
-            }
-        })
     }
     
 

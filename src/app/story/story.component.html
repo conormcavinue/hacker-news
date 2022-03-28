@@ -3,12 +3,12 @@
         <div class="row pt-3">
             <div class="col-md-9">
                 <h5><a [href]="story.url" class="storyLink" target="_blank">{{story.title}}</a></h5>
-                <p class="mt-auto mt-3 pt-3">Posted {{story.time | calculateDate}} by {{story.by}} </p>
+                <p class="mt-auto mt-3 pt-3">Posted {{story.time | calculateDate}} ago by {{story.by}} </p>
             </div>
             <div class="col-md-3 op-7 mt-auto">
                 <div class="row text-center op-7 pt-auto">
-                    <div class="col px-1"> <i class="fa fa-2x fa-bar-chart"></i> <span class="d-block text-sm">Score: {{story.score}}</span> </div>
-                    <div class="col px-1"> <i class="fa fa-2x fa-comments"></i> <span class="d-block text-sm">{{story.kids ? story.kids.length : 0}} Comments</span> </div>
+                    <div class="col px-1"> <span class="fa fa-2x fa-bar-chart"></span> <span class="d-block text-sm">Score: {{story.score}}</span> </div>
+                    <div class="col px-1"> <span class="fa fa-2x fa-comments"></span> <span class="d-block text-sm">{{story.kids ? story.kids.length : 0}} Comments</span> </div>
                 </div>
             </div>
         </div>
