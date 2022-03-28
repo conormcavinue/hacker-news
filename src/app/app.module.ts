@@ -19,8 +19,8 @@ import { NavBarComponent } from './shared/nav-bar.component';
     AppComponent,
     StoryListComponent,
     StoryComponent,
-    CalculateDatePipe,
-    NavBarComponent
+    NavBarComponent,
+    CalculateDatePipe
   ],
   imports: [
     BrowserModule,

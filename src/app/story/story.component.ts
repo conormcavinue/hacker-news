@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IStory } from './story';
-import { transition, style, animate, trigger } from '@angular/animations'
+import { transition, style, animate, trigger } from '@angular/animations';
 
 @Component({
   selector: 'hn-story',

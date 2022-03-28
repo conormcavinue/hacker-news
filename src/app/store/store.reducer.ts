@@ -2,7 +2,7 @@ import { createReducer, on } from "@ngrx/store";
 import { AppState } from "./app.state";
 import { addNewStory, addTopStory, clearStories, setStoryCount } from "./store.action";
 
-const initialState: AppState =  { 
+export const initialState: AppState =  { 
     top: [],
     new: [],
     storyCount: 0
